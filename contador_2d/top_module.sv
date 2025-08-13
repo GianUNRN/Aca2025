@@ -1,12 +1,13 @@
 module top_module (
-    input  logic clk,            // System clock
-    input  logic rst,            // Synchronous reset (active high)
-    input  logic en,             // Enable counting
-    input  logic cathod_anode,   // 1 = common anode, 0 = common cathode
-    output logic [6:0] seg,      // Segment outputs (a-g)
-    output logic [1:0] an,       // Anode/Cathode control lines
-    output logic dp,
-    output logic [5:0] other_an
+    input  logic        clk,            // System clock
+    input  logic        rst,            // Synchronous reset (active high)
+    input  logic        en,             // Enable counting
+    input  logic        cathod,   // 1 = common anode, 0 = common cathode
+    input  logic        up,
+    output logic [6:0]  seg,      // Segment outputs (a-g)
+    output logic [1:0]  an,       // Anode/Cathode control lines
+    output logic        dp,
+    output logic [5:0]  other_an
 );
     
     logic [3:0] units;
@@ -16,18 +17,19 @@ module top_module (
     logic       seg_refresh;
     logic       cnt_freq;
 
-    localparam int N_refresh = 3;//21;
-    localparam logic [N_refresh-1:0] MAX_VALUE_refresh = 3'd2;//21'd2**20;
-    
-    localparam int N_cnt = 4;//27;
-    localparam logic [N_cnt - 1:0] MAX_VALUE_cnt = 4'd8;//27'd2**26;
-    
+    localparam int                      N_refresh = 3;//21;
+    localparam logic    [N_refresh-1:0] MAX_VALUE_refresh = 3'd2;//21'd2**20;
+
+    localparam int                      N_cnt = 4;//27;
+    localparam logic    [N_cnt - 1:0]   MAX_VALUE_cnt = 4'd8;//27'd2**26;
+
 
 
     counter #(.N(N_refresh),.MAX(MAX_VALUE_refresh)) freq_div_refresh  (
         .clk(clk),
         .rst_n(rst),
-        .en(1'b1),         
+        .en(1'b1),
+        .up(1'b1),         
         .count(),
         .pulse(seg_refresh)
     );
@@ -35,7 +37,8 @@ module top_module (
     counter #(.N(N_cnt),.MAX(MAX_VALUE_cnt)) freq_div_cnt  (
         .clk(clk),
         .rst_n(rst),
-        .en(en),         
+        .en(en),
+        .up(1'b1),         
         .count(),
         .pulse(cnt_freq)
     );
@@ -45,6 +48,7 @@ module top_module (
         .clk(clk),
         .rst(rst),
         .en(cnt_freq),
+        .up(up),
         .units(units),
         .tens(tens)
     );
@@ -65,7 +69,7 @@ module top_module (
         .clk(clk),
         .rst(rst),
         .en(seg_refresh),
-        .cathod_anode(cathod_anode),
+        .cathod(cathod),
         .tens_seg(tens_seg),
         .units_seg(units_seg),
         .seg_out(seg),
@@ -73,7 +77,7 @@ module top_module (
     );
     
     always_comb begin
-        if(cathod_anode) begin
+        if(cathod) begin
             dp = 1'b0;
             other_an = '0;
         end else begin

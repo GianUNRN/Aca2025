@@ -5,7 +5,8 @@ module top_module_tb;
     logic clk;
     logic rst;
     logic en;
-    logic cathod_anode;
+    logic up;
+    logic cathod;
     logic [6:0] seg;
     logic [1:0] an;
 
@@ -18,7 +19,8 @@ module top_module_tb;
         .clk(clk),
         .rst(rst),
         .en(en),
-        .cathod_anode(cathod_anode),
+        .up(up),
+        .cathod(cathod),
         .seg(seg),
         .an(an)
     );
@@ -30,9 +32,10 @@ module top_module_tb;
         $dumpvars(0, top_module_tb);
 
         // Initial values
+        up = 1;
         rst = 0;
         en = 0;
-        cathod_anode = 1;  // Start with common-anode mode
+        cathod = 0;  // Start with common-anode mode
 
         // Hold reset
         repeat (3) @(posedge clk);
@@ -40,19 +43,13 @@ module top_module_tb;
         en = 1;
 
         // Let it run for some cycles in common-anode mode
-        repeat (1500) @(posedge clk);
+        repeat (500) @(posedge clk);
+        up = 0;
+        repeat (600) @(posedge clk);
 
         // Stop simulation
         $finish;
     end
 
-    // Monitor outputs
-    initial begin
-        $display("Time\tAN\tSEG\tMode");
-        forever begin
-            @(posedge clk);
-            $display("%0t\t%b\t%b\t%s", $time, an, seg,
-                     cathod_anode ? "CA" : "CC");
-        end
-    end
+
 endmodule
