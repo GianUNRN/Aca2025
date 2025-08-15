@@ -1,7 +1,7 @@
 module top_module(
     input  logic        clk,            // System clock
     input  logic        rst,            // Synchronous reset (active high)
-
+    input  logic        button,
     input  logic        cathod,   // 0 = common anode, 1 = common cathode
 
     input  logic [1:0]  lasers,
@@ -15,6 +15,7 @@ module top_module(
     logic [3:0] tens;
     logic [6:0] units_seg;
     logic [6:0] tens_seg;
+    logic       debounce_rst;
     logic       seg_refresh;
     logic       down;
     logic       cnt_car;
@@ -45,7 +46,8 @@ module top_module(
 
             S1_ONLY: begin
                 if (lasers[0])
-                    nxt_state_1 = lasers[0] & lasers[1] ? BOTH_ON:S1_ONLY;
+                    nxt_state_1 = state_t'(lasers[0] & lasers[1] ? BOTH_ON : S1_ONLY);
+
                 else 
                     nxt_state_1 = IDLE; // Wrong pattern, reset
             end
@@ -83,7 +85,7 @@ module top_module(
 
             S2_ONLY: begin
                 if (lasers[1])
-                    nxt_state_2 = lasers[0] & lasers[1] ? BOTH_ON:S2_ONLY;
+                    nxt_state_2 = state_t'(lasers[0] & lasers[1] ? BOTH_ON:S2_ONLY);
                 else 
                     nxt_state_2 = IDLE; // Wrong pattern, reset
             end
@@ -126,9 +128,16 @@ module top_module(
         down = (state_2 == DETECTED);
     end
 
+    debouncer #(.WIDTH(1), .SAMPLES(10)) u_debouncer (
+        .clk(clk),
+        .rst(rst),
+        .noisy_in(button),
+        .clean_out(debounce_rst)
+    );
+
     counter #(.N(N_refresh),.MAX(MAX_VALUE_refresh)) freq_div_refresh  (
         .clk(clk),
-        .rst_n(rst),
+        .rst_n(!debounce_rst),
         .en(1'b1),
         .up(1'b1),         
         .count(),
@@ -140,7 +149,7 @@ module top_module(
     // 2-digit BCD counter
     two_d_counter u_counter (
         .clk(clk),
-        .rst(rst),
+        .rst(!debounce_rst),
         .en(cnt_car),
         .up(!down),
         .units(units),

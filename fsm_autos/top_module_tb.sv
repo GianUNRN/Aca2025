@@ -4,11 +4,13 @@ module top_module_tb;
     // Testbench signals
     logic clk;
     logic rst;
-
+    logic button;
     logic [1:0] lasers;
     logic cathod;
     logic [6:0] seg;
     logic [1:0] an;
+    logic [5:0] other_an;
+    logic       dp;
 
     // Clock generation: 10 ns period => 100 MHz
     initial clk = 0;
@@ -18,10 +20,13 @@ module top_module_tb;
     top_module dut (
         .clk(clk),
         .rst(rst),
+        .button(button),
         .lasers(lasers),
         .cathod(cathod),
         .seg(seg),
-        .an(an)
+        .an(an),
+        .dp(dp),
+        .other_an(other_an)
     );
 
     // Test sequence
@@ -41,7 +46,17 @@ module top_module_tb;
         rst = 1;
 
         repeat(3) @(posedge clk);
+
         
+        repeat(3) begin
+            #5 button = 1;
+            #2 button = 0;
+            #7 button = 1;
+            #1 button = 0;
+        end
+        button = 1;
+        repeat(20) @(posedge clk);
+        button = 0;
         repeat (5) begin
             lasers = 2'b01;
             repeat(3) @(posedge clk);

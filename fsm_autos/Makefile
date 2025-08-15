@@ -5,6 +5,8 @@ FILES    = modules/counter.sv \
            modules/two_d_counter.sv \
            modules/seg7_dec.sv \
            modules/sevenseg_mux.sv \
+           modules/debouncer.sv \
+           modules/flip_flop_d.sv \
            top_module.sv \
            top_module_tb.sv
 
