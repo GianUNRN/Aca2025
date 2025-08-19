@@ -4,7 +4,7 @@ module sevenseg_mux #(
     input  logic clk,            // System clock
     input  logic reset,          // Synchronous reset (active high)
     input  logic en,             // Enable digit advance
-    input  logic [6:0] digit_values [N-1:0],  // 7-seg configs
+    input  logic [6:0] digit_values [N],  // 7-seg configs
     output logic [6:0] seg,      // Active segment configuration
     output logic [N-1:0] dig     // Active digit (active low)
 );

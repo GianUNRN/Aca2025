@@ -1,43 +1,49 @@
-`timescale 1ns/1ps
-module sevenseg_mux (
-    input  logic        clk,           // System clock
-    input  logic        rst,           // Synchronous reset (active high)
-    input  logic        en,            // Enable to switch digit
-    input  logic        cathod,  // 1 = common anode, 0 = common cathode
-    input  logic [6:0]  tens_seg,      // Pre-encoded tens digit segments (a-g) in common-anode format
-    input  logic [6:0]  units_seg,     // Pre-encoded units digit segments (a-g) in common-anode format
-    output logic [6:0]  seg_out,       // Output to segment lines
-    output logic [1:0]  an             // Anode/Cathode control lines (active depends on type)
+module sevenseg_mux #(
+    parameter N = 2  // Number of digits
+) (
+    input  logic clk,            // System clock
+    input  logic reset,          // Synchronous reset (active high)
+    input  logic en,             // Enable digit advance
+    input  logic cathod,
+    input  logic [6:0] digit_values [N],  // 7-seg configs
+    output logic [6:0] seg_out,      // Active segment configuration
+    output logic [N-1:0] an     // Active digit (active low)
 );
 
-    logic       sel_digit; // 0 = units, 1 = tens
-    logic [6:0] raw_seg;
-
-    // Toggle digit selection only on enable
+    logic [$clog2(N)-1:0] digit_index;  // Current digit index
+    logic [6:0] seg;    // Active segment configuration
+    logic [N-1:0] dig; 
     always_ff @(posedge clk) begin
-        if (!rst)
-            sel_digit <= 1'b1;  // Start with units
-        else if (en)
-            sel_digit <= ~sel_digit;
-    end
-
-    // Select which digit's segments to output
-    always_comb begin
-        if (sel_digit == 1'b1) begin
-            an      = cathod ? 2'b01 : 2'b10; // For CA: '0' active, CC: '1' active
-            raw_seg = units_seg;
+        if (!reset) begin
+            digit_index <= 0;
+            seg <= '1;        // All segments off
+            dig <= {N{1'b1}}; // All digits off
         end else begin
-            an      = cathod ? 2'b10 : 2'b01;
-            raw_seg = tens_seg;
+            if (en) begin
+                // Advance to next digit
+                if (digit_index == N-1)
+                    digit_index <= 0;
+                else
+                    digit_index <= digit_index + 1;
+            end
+            
+            // Output current digit's segment configuration
+            seg <= digit_values[digit_index];
+            
+            // Generate active-low one-hot digit select
+            dig <= ~(1 << digit_index);
         end
     end
 
     // Adjust segment polarity based on display type
     always_comb begin
-        if (cathod)
-            seg_out = raw_seg;       // Active low for CA (already in CA format)
-        else
-            seg_out = ~raw_seg;      // Invert for CC (active high)
+        if (cathod) begin
+            seg_out = seg;       // Active low for CA (already in CA format)
+            an = ~dig;
+        end else begin
+            seg_out = ~seg;      // Invert for CC (active high)
+            an = dig;
+        end
     end
 
 endmodule

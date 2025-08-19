@@ -2,14 +2,16 @@
 
 module top_module_tb;
     // Testbench signals
+    parameter int N_DIG = 4;
+
     logic clk;
     logic rst;
     logic button;
     logic [1:0] lasers;
     logic cathod;
     logic [6:0] seg;
-    logic [1:0] an;
-    logic [5:0] other_an;
+    logic [N_DIG-1:0] an;
+    logic [7-N_DIG:0] other_an;
     logic       dp;
 
     // Clock generation: 10 ns period => 100 MHz

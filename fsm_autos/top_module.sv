@@ -1,25 +1,31 @@
-module top_module(
-    input  logic        clk,            // System clock
-    input  logic        rst,            // Synchronous reset (active high)
-    input  logic        button,
-    input  logic        cathod,   // 0 = common anode, 1 = common cathode
+module top_module #(
+    parameter int N_DIG = 4
+)
+(
+    input  logic                clk,            // System clock
+    input  logic                rst,            // Synchronous reset (active high)
+    input  logic                button,
+    input  logic                cathod,   // 0 = common anode, 1 = common cathode
 
-    input  logic [1:0]  lasers,
-    output logic [6:0]  seg,      // Segment outputs (a-g)
-    output logic [1:0]  an,       // Anode/Cathode control lines
+    input  logic [1:0]          lasers,
+    output logic [6:0]          seg,      // Segment outputs (a-g)
+    output logic [N_DIG-1:0]    an,       // Anode/Cathode control lines
     output logic        dp,
-    output logic [5:0]  other_an
+    output logic [7-N_DIG:0]    other_an
 );
     
-    logic [3:0] units;
-    logic [3:0] tens;
-    logic [6:0] units_seg;
-    logic [6:0] tens_seg;
-    logic       debounce_rst;
-    logic       seg_refresh;
-    logic       down;
-    logic       cnt_car;
     
+    localparam N_refresh = 20;
+    localparam MAX_VALUE_refresh = 20'd2**19;
+
+    logic [3:0]         digits [N_DIG];
+    logic [N_DIG-1:0]   en_pulses;
+    logic [6:0]         seg_decoded [N_DIG];
+    logic               cnt_car;    
+    logic               down;
+    logic               seg_refresh;
+    logic               debounce_rst;
+
     // State encoding
     typedef enum logic [2:0] {
         IDLE,       // Waiting for first sensor active
@@ -31,11 +37,6 @@ module top_module(
 
     state_t state_1, nxt_state_1, state_2, nxt_state_2;
 
-    localparam int                      N_refresh = 21;
-    localparam logic    [N_refresh-1:0] MAX_VALUE_refresh = 21'd2**20;
-
-    localparam int                      N_cnt = 4;//27;
-    localparam logic    [N_cnt - 1:0]   MAX_VALUE_cnt = 4'd8;//27'd2**26;
     always_comb begin
         nxt_state_1 = state_1;
         case (state_1)
@@ -111,9 +112,16 @@ module top_module(
             default: nxt_state_2 = IDLE;
         endcase
     end
+
+    debouncer #(.WIDTH(1), .SAMPLES(1000)) u_debouncer (
+        .clk(clk),
+        .rst(rst),
+        .noisy_in(button),
+        .clean_out(debounce_rst)
+    );
     
     always_ff @( posedge clk ) begin 
-        if(!rst) begin
+        if(debounce_rst) begin
             state_1 <= IDLE;
             state_2 <= IDLE;
         end else begin
@@ -128,12 +136,7 @@ module top_module(
         down = (state_2 == DETECTED);
     end
 
-    debouncer #(.WIDTH(1), .SAMPLES(10)) u_debouncer (
-        .clk(clk),
-        .rst(rst),
-        .noisy_in(button),
-        .clean_out(debounce_rst)
-    );
+    
 
     counter #(.N(N_refresh),.MAX(MAX_VALUE_refresh)) freq_div_refresh  (
         .clk(clk),
@@ -146,39 +149,50 @@ module top_module(
 
     
 
-    // 2-digit BCD counter
-    two_d_counter u_counter (
+    genvar i;
+    generate
+        for (i = 0; i < N_DIG; i++) begin : cnt_gen
+            if (i == 0) begin
+                counter #(.N(4),.MAX(9)) cnt_inst  (
+                    .clk(clk),
+                    .rst_n(!debounce_rst),
+                    .en(cnt_car),         
+                    .up(!down),
+                    .count(digits[i]),
+                    .pulse(en_pulses[i])
+                );
+            end else begin
+                counter #(.N(4),.MAX(9)) cnt_inst  (
+                        .clk(clk),
+                        .rst_n(!debounce_rst),
+                        .en(en_pulses[i-1]),         
+                        .up(!down),
+                        .count(digits[i]),
+                        .pulse(en_pulses[i])
+                    );
+            end
+        end
+    endgenerate
+
+    genvar j;
+    generate
+        for (j = 0; j < N_DIG; j = j + 1) begin : decoders
+            seg7_dec u_dec (
+                .bin_in(digits[j]),
+                .seg_dec(seg_decoded[j])
+            );
+        end
+    endgenerate
+
+    sevenseg_mux #(.N(N_DIG)) u_mux (
         .clk(clk),
-        .rst(!debounce_rst),
-        .en(cnt_car),
-        .up(!down),
-        .units(units),
-        .tens(tens)
-    );
-
-    // BCD to 7-segment decoders
-    seg7_dec u_dec_units (
-        .bin_in(units),
-        .seg_out(units_seg)
-    );
-
-    seg7_dec u_dec_tens (
-        .bin_in(tens),
-        .seg_out(tens_seg)
-    );
-
-    // 7-segment display multiplexer
-    sevenseg_mux u_mux (
-        .clk(clk),
-        .rst(rst),
-        .en(seg_refresh),
-        .cathod(cathod),
-        .tens_seg(tens_seg),
-        .units_seg(units_seg),
+        .reset(!debounce_rst),          // Reset
+        .en(seg_refresh),     // Enable digit advance
+        .digit_values(seg_decoded),
         .seg_out(seg),
         .an(an)
     );
-    
+
     always_comb begin
         if(cathod) begin
             dp = 1'b0;

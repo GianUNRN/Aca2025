@@ -8,10 +8,10 @@ module top_module_tb;
 
     logic cathod;
     logic [6:0] seg;
-    logic [2:0] an;
+    logic [3:0] an;
     logic [4:0] other_an;
     logic       dp;
-    logic [3:0] units, tens, hundreds;
+    logic [3:0] units, tens, hundreds, thousands;
 
 
     // Clock generation: 10 ns period => 100 MHz
@@ -30,7 +30,8 @@ module top_module_tb;
         .other_an(other_an),
         .units(units),
         .tens(tens),
-        .hundreds(hundreds)
+        .hundreds(hundreds),
+        .thousands(thousands)
     );
 
     // Test sequence
@@ -51,9 +52,9 @@ module top_module_tb;
         en = 1;
 
         // Let it run for some cycles in common-anode mode
-        repeat (500) @(posedge clk);
+        repeat (5500) @(posedge clk);
   
-        repeat (600) @(posedge clk);
+
 
         // Stop simulation
         $finish;

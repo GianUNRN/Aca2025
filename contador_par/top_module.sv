@@ -4,22 +4,23 @@ module top_module(
     input  logic        cathod,   // 0 = common anode, 1 = common cathode
     input  logic        en,             // Enable counting
     output logic [6:0]  seg,      // Segment outputs (a-g)
-    output logic [2:0]  an,       // Anode/Cathode control lines
+    output logic [3:0]  an,       // Anode/Cathode control lines
     output logic        dp,
     output logic [4:0]  other_an,
     output logic [3:0]       units,
     output logic [3:0]       tens,
-    output logic [3:0]       hundreds // 3 digits for the counter
+    output logic [3:0]       hundreds,
+    output logic [3:0]       thousands 
 );
     localparam N_cnt = 4;
     localparam MAX_VALUE_cnt = 4'd3;
     localparam N_refresh = 3;
     localparam MAX_VALUE_refresh = 3'd1;
-    localparam N_DIG = 3;
+    localparam N_DIG = 4;
 
-    logic [3:0]         digits [N_DIG-1:0];
+    logic [3:0]         digits [N_DIG];
     logic [N_DIG-1:0]   en_pulses;
-    logic [6:0]         seg_decoded [N_DIG-1:0];
+    logic [6:0]         seg_decoded [N_DIG];
 
     logic       seg_refresh;
     logic       cnt_freq;
@@ -28,6 +29,7 @@ module top_module(
     assign units = digits[0];
     assign tens = digits[1];
     assign hundreds = digits[2];
+    assign thousands = digits[3];
 
     counter #(.N(N_cnt),.MAX(MAX_VALUE_cnt)) freq_div_cnt  (
         .clk(clk),
