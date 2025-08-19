@@ -41,7 +41,7 @@ module top_module #(
         nxt_state_1 = state_1;
         case (state_1)
             IDLE: begin
-                if (lasers[0])
+                if (lasers[0] && !lasers[1])
                     nxt_state_1 = S1_ONLY;
             end
 
