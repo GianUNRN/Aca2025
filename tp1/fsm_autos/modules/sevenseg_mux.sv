@@ -21,7 +21,7 @@ module sevenseg_mux #(
         end else begin
             if (en) begin
                 // Advance to next digit
-                if (digit_index == N-1)
+                if (digit_index == $bits(digit_index)'(N-1))
                     digit_index <= 0;
                 else
                     digit_index <= digit_index + 1;

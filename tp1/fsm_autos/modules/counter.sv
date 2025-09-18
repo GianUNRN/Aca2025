@@ -10,7 +10,7 @@ module counter #(
     output  logic [N-1:0] count,
     output  logic pulse
 );
-    assign pulse = up ? (en && count == MAX) : (en && count == '0);
+    assign pulse = up ? (en && count == $bits(count)'(MAX)) : (en && count == '0);
 
 
     always_ff @(posedge clk) begin
@@ -18,14 +18,14 @@ module counter #(
             count <= '0;
         end else if (en) begin
             if (up) begin
-                if (count == MAX) begin
+                if (count == $bits(count)'(MAX)) begin
                     count <= '0;
                 end else begin
                     count <= count + 1;
                 end
             end else begin
                 if (count == '0) begin
-                    count <= MAX;
+                    count <= $bits(count)'(MAX);
                 end else begin
                     count <= count - 1;
                 end
