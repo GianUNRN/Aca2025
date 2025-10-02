@@ -7,8 +7,10 @@ module register_file(
 );
     logic [31:0] rf [0:31];
 
-    // Inicializar el registro 0 a 0
-    initial rf[0] = 32'b0;
+    // Inicializar todos los registros a 0
+    initial begin
+        $readmemb("init.txt", rf);
+    end
 
     assign rd1 = (ra1 != 0) ? rf[ra1] : 0;
     assign rd2 = (ra2 != 0) ? rf[ra2] : 0;
@@ -16,4 +18,6 @@ module register_file(
     always_ff @(posedge clk) begin
         if (we && wa != 0) rf[wa] <= wd;
     end
+
+    
 endmodule

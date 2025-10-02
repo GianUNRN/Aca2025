@@ -1,17 +1,25 @@
-module memory(
+module memory #(
+    parameter int WIDTH = 32
+)(
     input logic clk,
     input logic we,
+    input logic cs,
     input logic [4:0] addr,
-    input logic [31:0] wd,
-    output logic [31:0] rd
+    input logic [WIDTH-1:0] wd,
+    output logic [WIDTH-1:0] rd
 );
-    logic [9:0] mem [32];
+    logic [WIDTH-1:0] mem [32];
 
-    
-    assign rd = {22'b0,mem[addr]} ;
+    initial begin
+        for (int i = 0; i < 32; i++) begin
+            mem[i] = '0;
+        end
+    end
+
+    assign rd = cs ?  mem[addr]: '0;
 
 
     always_ff @(posedge clk) begin
-        if (we) mem[addr] <= wd[9:0];
+        if (we & cs) mem[addr] <= wd;
     end
 endmodule
