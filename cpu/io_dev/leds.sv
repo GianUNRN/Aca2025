@@ -2,10 +2,10 @@ module leds (
     input logic clk,
     input logic en,
     input logic rst,
-    input logic [7:0] data,
-    output logic [7:0] leds_out
+    input logic [15:0] data,
+    output logic [15:0] leds_out
 );
-    logic [7:0] leds_next;
+    logic [15:0] leds_next;
     always_ff @(posedge clk) begin
         if(rst) begin
             leds_next <= '0;

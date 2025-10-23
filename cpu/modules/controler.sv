@@ -25,11 +25,11 @@ module controler(
                                 alu_src = 2'b00;
                                 alu_control = 2'b00;
                                 mem_write = 0;
-                                result_src = 2'b0;
+                                result_src = 2'b00;
                                 pc_src = 0;
                                 alu_result_src = 0;
                                 imm_src = 3'b000;
-                                cs = 4'b0;
+                                cs = 4'b0000;
 
                             end 
                             7'b0100000: begin // SUB
@@ -37,11 +37,11 @@ module controler(
                                 alu_src = 2'b00;
                                 alu_control = 2'b11;
                                 mem_write = 0;
-                                result_src = 2'b0;
+                                result_src = 2'b00;
                                 pc_src = 0;
                                 alu_result_src = 0;
                                 imm_src = 3'b000;
-                                cs = 4'b0;
+                                cs = 4'b0000;
                             end
 
 
@@ -50,11 +50,11 @@ module controler(
                                 alu_src = 2'b00;
                                 alu_control = 2'b00; 
                                 mem_write = 0;
-                                result_src = 2'b0;
+                                result_src = 2'b00;
                                 pc_src = 0;
                                 alu_result_src = 0;
                                 imm_src = 3'b000;
-                                cs = 4'b0;
+                                cs = 4'b0000;
                             end
                         endcase
                     end
@@ -63,11 +63,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b010: begin //slt
@@ -75,11 +75,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b11;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b011:begin //sltu
@@ -87,11 +87,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b11;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b100: begin //xor
@@ -99,11 +99,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b101:begin
@@ -112,21 +112,21 @@ module controler(
                             alu_src = 2'b00;
                             alu_control = 2'b01;
                             mem_write = 0;
-                            result_src = 2'b0;
+                            result_src = 2'b00;
                             pc_src = 0;
                             alu_result_src = 0;
                             imm_src = 3'b000;
-                            cs = 4'b0;
+                            cs = 4'b0000;
                         end else begin //sra
                             reg_write = 1;
                             alu_src = 2'b00;
                             alu_control = 2'b11;
                             mem_write = 0;
-                            result_src = 2'b0;
+                            result_src = 2'b00;
                             pc_src = 0;
                             alu_result_src = 0;
                             imm_src = 3'b000;
-                            cs = 4'b0;
+                            cs = 4'b0000;
                         end
                     end
 
@@ -135,11 +135,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b111: begin//And
@@ -147,11 +147,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
                     
 
@@ -161,11 +161,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b00; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
                 endcase
                
@@ -177,11 +177,11 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b00;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b001: begin //slli
@@ -189,11 +189,11 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     
@@ -203,11 +203,11 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b11;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 0;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b011: begin //sltiu
@@ -215,11 +215,11 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b11;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 0;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b100: begin //xori
@@ -227,11 +227,11 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b01;
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 0;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
                     3'b101: begin
@@ -240,21 +240,21 @@ module controler(
                             alu_src = 2'b01;
                             alu_control = 2'b01;
                             mem_write = 0;
-                            result_src = 2'b0;
+                            result_src = 2'b00;
                             pc_src = 0;
                             alu_result_src = 0;
                             imm_src = 0;
-                            cs = 4'b0;
+                            cs = 4'b0000;
                         end else begin //srai
                             reg_write = 1;
                             alu_src = 2'b01;
                             alu_control = 2'b11;
                             mem_write = 0;
-                            result_src = 2'b0;
+                            result_src = 2'b00;
                             pc_src = 0;
                             alu_result_src = 0;
                             imm_src = 0;
-                            cs = 4'b0;
+                            cs = 4'b0000;
                         end
                     end
 
@@ -264,22 +264,22 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b01; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
                     3'b111: begin // ANDI
                         reg_write = 1;
                         alu_src = 2'b01;
                         alu_control = 2'b01; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
 
 
@@ -288,11 +288,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b00; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                         
                     end
                 endcase
@@ -302,22 +302,35 @@ module controler(
                 alu_src = 2'b11;
                 alu_control = 2'b00; 
                 mem_write = 0;
-                result_src = 2'b0;
+                result_src = 2'b10;
                 pc_src = 0;
                 alu_result_src = 0;
                 imm_src = 3'b100;
-                cs = 4'b0;
+                cs = 4'b0000;
             end
+
+            7'b0110111: begin //lui
+                reg_write = 1;
+                alu_src = 2'b11;
+                alu_control = 2'b00; 
+                mem_write = 0;
+                result_src = 2'b10;
+                pc_src = 0;
+                alu_result_src = 0;
+                imm_src = 3'b100;
+                cs = 4'b0000;
+            end
+
             7'b1100011: begin //branch instructions (diferenciadas por funct3)
                 reg_write = 0;
                 alu_src = 2'b11;
                 alu_control = 2'b00; 
                 mem_write = 0;
-                result_src = 2'b0;
+                result_src = 2'b00;
                 pc_src = flags;
                 alu_result_src = 0;
                 imm_src = 3'b010;
-                cs = 4'b0;
+                cs = 4'b0000;
             end
             
             7'b1101111 : begin // JAL
@@ -325,22 +338,22 @@ module controler(
                 alu_src = 2'b11;
                 alu_control = 2'b00; 
                 mem_write = 0;
-                result_src = 2'b0;
+                result_src = 2'b00;
                 pc_src = 1;
                 alu_result_src = 1;
                 imm_src = 3'b011;
-                cs = 4'b0;
+                cs = 4'b0000;
             end 
             7'b1100111: begin //JALR
                 reg_write = 1;
                 alu_src = 2'b01;
                 alu_control = 2'b00; 
                 mem_write = 0;
-                result_src = 2'b0;
+                result_src = 2'b00;
                 pc_src = 1;
                 alu_result_src = 1;
                 imm_src = 3'b011;
-                cs = 4'b0;
+                cs = 4'b0000;
             end
 
             7'b0100011 : begin 
@@ -350,7 +363,7 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b00;
                         mem_write = 1;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b001;
@@ -362,7 +375,7 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b00;
                         mem_write = 1;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b001;
@@ -373,7 +386,7 @@ module controler(
                         alu_src = 2'b01;
                         alu_control = 2'b00;
                         mem_write = 1;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b001;
@@ -387,11 +400,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b00; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0;
+                        cs = 4'b0000;
                     end
                 endcase
             end
@@ -462,11 +475,11 @@ module controler(
                         alu_src = 2'b00;
                         alu_control = 2'b00; 
                         mem_write = 0;
-                        result_src = 2'b0;
+                        result_src = 2'b00;
                         pc_src = 0;
                         alu_result_src = 0;
                         imm_src = 3'b000;
-                        cs = 4'b0; 
+                        cs = 4'b0000; 
                     end
                 endcase
             end
@@ -479,11 +492,11 @@ module controler(
                 alu_src = 2'b00;
                 alu_control = 2'b00; 
                 mem_write = 0;
-                result_src = 2'b0;
+                result_src = 2'b00;
                 pc_src = 0;
                 alu_result_src = 0;
                 imm_src = 3'b000;
-                
+                cs = 4'b0000;
             end
         endcase
     end

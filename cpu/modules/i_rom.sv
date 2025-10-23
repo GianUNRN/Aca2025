@@ -13,10 +13,13 @@ module i_rom (
         end
 
         //IO operations
-        memory[0] = 32'h01700213; //addi x4, x0, 23     0       res= 23
-        memory[1] = 32'h02402023; //sw x4, 32(x0)       4
-        memory[2] = 32'h02102283; //lw x5, 33(x0)       8       
-        memory[3] = 32'h00020233; //add x4, x4, x0      12
+        memory[0] = 32'h00000293; //addi x5, x0, 0      0
+        memory[1] = 32'h02102283; //lw x5, 33(x0)       4       
+  
+        memory[2] = 32'h025021a3; //sw x5, 35(x0)       8
+        memory[3] = 32'hff5ff36f;  //jal x6, -12        12      end program
+
+
         // // load and store 
 
         // memory[0] = 32'h01700213; //addi x4, x0, 23     0       res= 23
