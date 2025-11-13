@@ -7,7 +7,9 @@ module top(
     output logic [15:0] leds_out,
     output logic [6:0]          seg,      // Segment outputs (a-g)
     output logic [7:0]    an,       // Anode/Cathode control lines
-    output logic        dp 
+    output logic        dp,
+    input  logic       uart_rx,  // desde PC (USB-UART)
+    output logic       uart_tx
 
 );
     logic [31:0] alu_result;
@@ -15,6 +17,12 @@ module top(
     logic [4:0] rd;
     logic [31:0] reg_data_2,reg_data_1, data_out;
     logic reset;    
+
+    
+    
+    logic [31:0] aux;
+
+    assign aux = pc / 4;
     
     debouncer #(.WIDTH(1), .SAMPLES(3)) u_debouncer (
         .clk(clk),
@@ -27,6 +35,7 @@ module top(
     logic mem_write;
     
     logic [31:0] instr;
+
 
     logic [3:0] cs;
     
@@ -69,7 +78,9 @@ module top(
         .leds_out(leds_out),
         .seg(seg),
         .an(an),    
-        .dp(dp)
+        .dp(dp),
+        .uart_rx(uart_rx),  // desde PC (USB-UART)
+        .uart_tx(uart_tx)
     );
     
 endmodule

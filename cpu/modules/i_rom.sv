@@ -7,17 +7,23 @@ module i_rom (
     
     // Inicialización con algunas instrucciones de ejemplo
     initial begin
-
+       
         for (int i = 0; i < 256; i++) begin
             memory[i] = 32'h00000013;
         end
 
-        //IO operations
-        memory[0] = 32'h00000293; //addi x5, x0, 0      0
-        memory[1] = 32'h02102283; //lw x5, 33(x0)       4       
+
+        memory[0] = 32'h07d00613;
+        memory[1] = 32'h02c02023;
+        memory[2] = 32'h02c02023;
+   
+        
+        // //IO operations
+        // memory[0] = 32'h00000293; //addi x5, x0, 0      0
+        // memory[1] = 32'h02102283; //lw x5, 33(x0)       4       
   
-        memory[2] = 32'h025021a3; //sw x5, 35(x0)       8
-        memory[3] = 32'hff5ff36f;  //jal x6, -12        12      end program
+        // memory[2] = 32'h025021a3; //sw x5, 35(x0)       8
+        // memory[3] = 32'hff5ff36f;  //jal x6, -12        12      end program
 
 
         // // load and store 
@@ -166,6 +172,7 @@ module i_rom (
         
 
     end
+    
     
     // Lectura asíncrona
     assign data = memory[address];

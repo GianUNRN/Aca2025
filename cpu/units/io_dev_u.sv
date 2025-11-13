@@ -11,19 +11,27 @@ module io_dev_u(
     output logic [15:0] leds_out,
     output logic [6:0]          seg,      // Segment outputs (a-g)
     output logic [7:0]    an,       // Anode/Cathode control lines
-    output logic        dp
+    output logic        dp,
+    input  logic       uart_rx,  // desde PC (USB-UART)
+    output logic       uart_tx
 );
 
     logic [7:0] mem_data_0,mem_data_1,mem_data_2, mem_data_3;
     logic [15:0] decoded_switches;
     logic w_enable_data_mem;
     logic [3:0] cs_out;
-    logic [3:0] io_enable;
+    logic [5:0] io_enable;
 
     logic [31:0] mem_data_out;
     logic [31:0] data_mem;
     logic [15:0] data_leds;
     logic [31:0] data_7seg;
+
+
+    logic [7:0] tx_data_reg;
+    logic [7:0] rx_data_reg;
+    logic rx_valid;
+
 
     io_controler io_controler_instance (
         .w_enable(mem_write),
@@ -35,7 +43,20 @@ module io_dev_u(
         .data_mem(data_mem),
         .data_leds(data_leds),
         .data_7seg(data_7seg),
-        .io_enable(io_enable)
+        .io_enable(io_enable),
+        .data_uart(tx_data_reg)
+
+    );
+
+    uart_top uart_unit (
+        .clk(clk),
+        .reset(rst),
+        .uart_rx(uart_rx),
+        .tx_data_reg(tx_data_reg),
+        .tx_enable(io_enable[5]),
+        .uart_tx(uart_tx),
+        .rx_data_reg(rx_data_reg),
+        .rx_valid(rx_valid)
     );
 
     sevenseg #(.N_DIG(8)) sevenseg_instance (
@@ -89,11 +110,13 @@ module io_dev_u(
     );
 
     always_comb begin : MUX_DATA_READ
-        case(io_enable[2:1])
-            2'b00: data_out = mem_data_out;
-            2'b01: data_out = {{24{1'b0}},decoded_switches};
+        case(io_enable[5:1])
+            5'b00000: data_out = mem_data_out;
+            5'b00001: data_out = {{16{1'b0}},decoded_switches};
+            5'b01000: data_out = rx_valid ? {{24{1'b1}}, rx_data_reg} : 32'h0;
             default: data_out = '0;
         endcase
     end
+    
     
 endmodule

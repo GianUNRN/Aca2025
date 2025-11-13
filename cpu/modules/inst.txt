@@ -1,0 +1,32 @@
+Registro  Valor (hex)       Comentario
+x0        0x00000000        Siempre cero
+x1        0x00000005        Inicializado al principio
+x2        0x0000000A        Inicializado al principio
+x3        0x00000010        Dirección de memoria baja
+x4        0x00000000        Registro de prueba de branches
+x5        0xCAFEB000        Resultado final esperado
+x6        0x0000000F        x1 + x2
+x7        0x00000005        x2 - x1
+x8        0x000000A0        x1 << x1 = 5 << 5
+x9        0x00000001        x1 < x2 (signed)
+x10       0x00000000        x2 < x1 (unsigned)
+x11       0x0000000A        x6 XOR x7
+x12       0x0000000F        x6 OR x7
+x13       0x00000005        x6 AND x7
+x14       0x0000000F        OR de aritmética/lógica
+x15       0x00000005        AND de aritmética/lógica
+x16       0x00000004        x1 - 1
+x17       0x00000001        x1 < 10 (signed)
+x18       0x00000006        x1 XOR 3
+x19       0x0000000D        x1 OR 8
+x20       0x00000001        x1 AND 3
+x21       0x0000000A        x1 << 1
+x22       0x00000005        x21 >> 1 (logical)
+x23       0x00000005        x21 >> 1 (arithmetic)
+x24       0x0000000F        Valor cargado desde memoria (lw x24,0(x3))
+x25       0x00000001        Branch test
+x26       0x00000003        Branch test
+x27       0x00000004        Branch test
+x28       0x00000084        PC al ejecutar auipc
+x29       0x00000088        PC después de jal
+x31       0x0000002A        addi x31, x0, 42

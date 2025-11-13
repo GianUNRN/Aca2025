@@ -7,7 +7,7 @@ module top_tb ();
     logic [6:0]          seg;      // Segment outputs (a-g)
     logic [7:0]    an;       // Anode/Cathode control lines
     logic        dp ;
-
+    logic tx_data;
 
     top top(
         .*
@@ -31,7 +31,12 @@ module top_tb ();
         repeat(4) @(posedge clk);
         button = 0;
         sw = 16'h7f39;
-        repeat(50) @(posedge clk);
+        repeat(39) @(posedge clk);
+        // for (int iterator = 0; iterator < 32; iterator++) begin
+        //     sw = iterator;
+        //     repeat(3) @(posedge clk);
+        // end
+        
         
         $finish;
     end

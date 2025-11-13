@@ -9,10 +9,11 @@ VLOGFLAGS ?= -g2012
 MODULES := $(wildcard modules/*.sv)
 UNITS   := $(wildcard units/*.sv)
 IO 		:= $(wildcard io_dev/*.sv)
+UART	:= $(wildcard uart/*.sv)
 MAIN    := top.sv top_tb.sv
 
 # put everything together, sort for deterministic order
-FILES   := $(sort $(MODULES) $(UNITS) $(IO) $(MAIN))
+FILES   := $(sort $(MODULES) $(UNITS) $(IO)  $(UART) $(MAIN))
 
 # sanity check: stop early if no files found
 ifeq ($(strip $(FILES)),)
